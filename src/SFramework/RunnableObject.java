@@ -1,6 +1,6 @@
 package SFramework;
 
-public class RunnableObject
+public class RunnableObject implements Runnable
 {
     public boolean Active;
     public boolean Activated;
@@ -8,28 +8,32 @@ public class RunnableObject
     public boolean UsesInput;
     public boolean UsesMain;
     public boolean UsesRenderer;
+    public boolean UsesThreading;
 
-    public FrameworkProgram m_Framework_program;
+    public FrameworkProgram GetFrameworkProgram;
 
     protected RunnableObject(FrameworkProgram frameworkProgram)
     {
-        this(frameworkProgram, true, true, true, true);
+        this(frameworkProgram, true, true, true, true, false);
     }
 
-    protected RunnableObject(FrameworkProgram frameworkProgram, boolean usesInput, boolean usesMain, boolean usesRenderer, boolean startsActivated) {
-        m_Framework_program = frameworkProgram;
+    protected RunnableObject(FrameworkProgram frameworkProgram, boolean usesInput, boolean usesMain,
+                             boolean usesRenderer, boolean startsActivated, boolean usesThreading)
+    {
+        GetFrameworkProgram = frameworkProgram;
         UsesInput = usesInput;
         UsesMain = usesMain;
         UsesRenderer = usesRenderer;
+        UsesThreading = usesThreading;
 
         ShouldDestruct = false;
 
-        if(startsActivated) {
+        if (startsActivated)
+        {
             Active = true;
             Activated = true;
             AddToLoops();
-        }
-        else
+        } else
         {
             Active = false;
             Activated = false;
@@ -37,7 +41,10 @@ public class RunnableObject
 
         frameworkProgram.Objects.add(this);
 
-        this.Start();
+        if (!UsesThreading)
+        {
+            this.Start();
+        }
     }
 
     protected void InputLoop(double deltaTime)
@@ -51,6 +58,12 @@ public class RunnableObject
     }
 
     protected void RenderLoop(double deltaTime)
+    {
+
+    }
+
+    @Override
+    public void run()
     {
 
     }
@@ -69,15 +82,15 @@ public class RunnableObject
     {
         if (UsesInput)
         {
-            m_Framework_program.InputObjects.remove(this);
+            GetFrameworkProgram.InputObjects.remove(this);
         }
         if (UsesMain)
         {
-            m_Framework_program.MainObjects.remove(this);
+            GetFrameworkProgram.MainObjects.remove(this);
         }
         if (UsesRenderer)
         {
-            m_Framework_program.RenderObjects.remove(this);
+            GetFrameworkProgram.RenderObjects.remove(this);
         }
     }
 
@@ -85,15 +98,15 @@ public class RunnableObject
     {
         if (UsesInput)
         {
-            m_Framework_program.InputObjects.add(this);
+            GetFrameworkProgram.InputObjects.add(this);
         }
         if (UsesMain)
         {
-            m_Framework_program.MainObjects.add(this);
+            GetFrameworkProgram.MainObjects.add(this);
         }
         if (UsesRenderer)
         {
-            m_Framework_program.RenderObjects.add(this);
+            GetFrameworkProgram.RenderObjects.add(this);
         }
     }
 

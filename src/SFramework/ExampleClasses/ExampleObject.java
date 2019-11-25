@@ -8,8 +8,8 @@ public class ExampleObject extends RunnableObject
         super(frameworkProgram);
     }
 
-    protected ExampleObject(FrameworkProgram frameworkProgram, boolean usesInput, boolean usesMain, boolean usesRenderer, boolean startsActivated) {
-        super(frameworkProgram, usesInput, usesMain, usesRenderer, startsActivated);
+    protected ExampleObject(FrameworkProgram frameworkProgram, boolean usesInput, boolean usesMain, boolean usesRenderer, boolean startsActivated, boolean usesThreading) {
+        super(frameworkProgram, usesInput, usesMain, usesRenderer, startsActivated, usesThreading);
     }
 
     @Override
